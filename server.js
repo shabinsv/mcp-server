@@ -10,8 +10,6 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/mcp", async (req, res) => {
-  console.log("post");
-  
   const server = createMcpServer();
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
@@ -21,8 +19,6 @@ app.post("/mcp", async (req, res) => {
     await server.connect(transport);
     await transport.handleRequest(req, res, req.body);
   } catch (error) {
-    console.error("MCP request error:", error);
-
     if (!res.headersSent) {
       res.status(500).json({
         jsonrpc: "2.0",
@@ -42,7 +38,6 @@ app.post("/mcp", async (req, res) => {
 });
 
 app.get("/mcp", (req, res) => {
-    console.log("get");
   res.status(405).json({
     jsonrpc: "2.0",
     error: {
@@ -54,8 +49,5 @@ app.get("/mcp", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(
-    `MCP server (streamable HTTP) listening on port ${PORT}, endpoint POST /mcp (no auth)`
-  );
-  console.log(`API base: ${API_BASE_URL}`);
+  process.stdout.write(`MCP server started on port ${PORT} API base: ${API_BASE_URL}\n`);
 });

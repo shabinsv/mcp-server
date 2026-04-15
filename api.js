@@ -1,5 +1,6 @@
 const API_BASE_URL = process.env.API_BASE_URL;
 const VALID_CATEGORIES = ["tech", "finance", "lifestyle"];
+const { logError, logRequest, logResponse } = require("./logger");
 
 async function apiRequest(method, endpoint, body) {
   const url = endpoint.startsWith("http")
@@ -16,24 +17,39 @@ async function apiRequest(method, endpoint, body) {
   if (body && (method === "POST" || method === "PUT")) {
     options.body = JSON.stringify(body);
   }
-  console.log(url);
-  
-  const response = await fetch(url, options);
-  const text = await response.text();
-  console.log(text);
 
-  let data;
+  logRequest(method, url);
+
+  let hasLoggedError = false;
+
   try {
-    data = text ? JSON.parse(text) : {};
-  } catch {
-    data = {};
-  }
+    const response = await fetch(url, options);
+    const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(data.error || response.statusText || `HTTP ${response.status}`);
-  }
+    let data;
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = text || {};
+    }
 
-  return data;
+    if (!response.ok) {
+      const error = new Error(
+        (data && data.error) || response.statusText || `HTTP ${response.status}`
+      );
+      logError(method, url, data);
+      hasLoggedError = true;
+      throw error;
+    }
+
+    logResponse(method, url, data);
+    return data;
+  } catch (error) {
+    if (!hasLoggedError) {
+      logError(method, url, error);
+    }
+    throw error;
+  }
 }
 
 function validatePostInput(args) {
