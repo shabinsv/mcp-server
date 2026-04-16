@@ -15,19 +15,19 @@ function formatData(data) {
 }
 
 function logRequest(method, url) {
-  process.stdout.write(`INFO [${new Date().toString()}] ${method} URL: ${url}\n`);
+  console.log(`[INFO]: ${method} URL: ${url}`);
 }
 
 function logResponse(method, url, data) {
-  process.stdout.write(
-    `INFO [${new Date().toString()}] RESPONSE (${method} ${url}): ${formatData(data)}\n`
+  console.log(
+    `[INFO]: RESPONSE (${method} [${url}): ${formatData(data)}`
   );
 }
 
 function logError(method, url, error) {
   const message = error instanceof Error ? error.message : formatData(error);
-  process.stderr.write(
-    `ERROR [${new Date().toString()}] RESPONSE(${method} ${url}): ${message}\n`
+  console.error(
+    `[ERROR]: RESPONSE (${method} ${url}): ${message}`
   );
 }
 
