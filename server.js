@@ -49,5 +49,5 @@ app.get("/mcp", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  process.stdout.write(`MCP server started on port ${PORT} API base: ${API_BASE_URL}\n`);
+  console.log(`MCP server started on port ${PORT} API base: ${API_BASE_URL}\n`);
 });
