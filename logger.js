@@ -20,7 +20,7 @@ function logRequest(method, url) {
 
 function logResponse(method, url, data) {
   console.log(
-    `[INFO]: RESPONSE (${method} [${url}): ${formatData(data)}`
+    `[INFO]: RESPONSE (${method} ${url}): ${formatData(data)}`
   );
 }
 
